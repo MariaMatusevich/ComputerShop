@@ -25,6 +25,11 @@ namespace ComputerShop.Models
             Time = time;
         }
 
+        public Operation() : this(Guid.NewGuid(), OperationType.Sold, "UNKNOWN", Guid.NewGuid(), DateTime.MinValue)
+        {
+
+        }
+
 }
     public enum OperationType
     {

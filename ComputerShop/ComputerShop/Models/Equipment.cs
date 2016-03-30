@@ -28,6 +28,38 @@ namespace ComputerShop.Models
             Status = status;
             Price = price;
         }
+
+        public Equipment() : this(EquipmentType.Computer, "UNKNOWN", "UNKNOWN", Status.Sold, -111)
+        {
+
+        }
+
+        public string GetType()
+        {
+            switch (Type)
+            {
+                case EquipmentType.Computer:
+                    return "Компьютер";
+                case EquipmentType.Flash:
+                    return "Флеш память";
+                case EquipmentType.HardDrive:
+                    return "Жесткий диск";
+            }
+            return "Unknown Type";
+        }
+
+        public string GetStatus()
+        {
+            switch(Status)
+            {
+                case Status.InStock:
+                    return "Есть в наличии";
+                case Status.Sold:
+                    return "Продано";
+            }
+
+            return "Unknown Status";
+        }
     }
 
     public enum EquipmentType
