@@ -226,6 +226,13 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Logotip.jpg" />
+    <Content Include="Images\Monitor.jpg" />
+    <Content Include="Images\Multimedia.jpg" />
+    <Content Include="Images\Notebook.jpg" />
+    <Content Include="Images\PC.jpg" />
+    <Content Include="Images\Periferiya.jpg" />
+    <Content Include="Images\Printer.jpg" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
     <Content Include="Scripts\bootstrap-select.js" />
