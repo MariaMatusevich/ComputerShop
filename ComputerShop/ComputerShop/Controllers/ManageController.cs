@@ -241,6 +241,42 @@ namespace ComputerShop.Controllers
             AddErrors(result);
             return View(model);
         }
+/*
+        //
+        // GET: /Manage/ChangeName
+        public ActionResult ChangeName()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Manage/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeName(ChangeNameViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var userId = Microsoft.AspNet.Identity.IdentityExtensions.GetUserId(User.Identity);
+            var userDb = new ApplicationDbContext();
+            var CurrentUser = userDb.Users.Where(o => o.Id == userId).FirstOrDefault();
+
+            var result =  User.Identity;
+            if (result.Succeeded)
+            {
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                }
+                return RedirectToAction("InStock", "Shop");
+            }
+            AddErrors(result);
+            return View(model);
+        }*/
 
         //
         // GET: /Manage/SetPassword

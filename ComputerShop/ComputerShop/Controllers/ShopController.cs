@@ -17,7 +17,7 @@ namespace ComputerShop.Controllers
         ApplicationUser CurrentUser = null;
 
 
-        public ShopController()
+        private void RefreshUserName()
         {
             var userId = Microsoft.AspNet.Identity.IdentityExtensions.GetUserId(User.Identity);
             CurrentUser = _udb.Users.Where(o => o.Id == userId).FirstOrDefault();
@@ -25,6 +25,8 @@ namespace ComputerShop.Controllers
 
         public ActionResult InStock()
         {
+            RefreshUserName();
+
             IEnumerable<Equipment> equipments = _db.Equipments.Where(o => o.Status == Status.InStock).ToList();
             ViewBag.Equipments = equipments;
 
@@ -35,6 +37,8 @@ namespace ComputerShop.Controllers
 
         public ActionResult Sold()
         {
+            RefreshUserName();
+
             IEnumerable<Equipment> equipments = _db.Equipments.Where(o => o.Status == Status.Sold).ToList();
             ViewBag.Equipments = equipments;
 

@@ -14,6 +14,11 @@ namespace ComputerShop.Controllers
 
         public ActionResult Index()
         {
+            if (User.Identity.IsAuthenticated) // if the user is already logged in
+            {
+                return RedirectToAction("InStock", "Shop");
+            }
+
             //IEnumerable<Equipment> equipments = _db.Equipments.Where(o => o.Status == Status.InStock).ToList();
             //ViewBag.Equipments = equipments;
             return View();

@@ -58,6 +58,14 @@ namespace ComputerShop.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class ChangeNameViewModel
+    {
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Name")]
+        public string Name { get; set; }
+    }
+
     public class AddPhoneNumberViewModel
     {
         [Required]
