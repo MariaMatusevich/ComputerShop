@@ -10,7 +10,7 @@ namespace ComputerShop.Controllers
 {
     public class HomeController : Controller
     {
-        ComputerShopDbContext _db = new ComputerShopDbContext();
+        ComputerShopRepository repo = new ComputerShopRepository();
 
         public ActionResult Index()
         {
@@ -19,15 +19,19 @@ namespace ComputerShop.Controllers
                 return RedirectToAction("InStock", "Shop");
             }
 
-            //IEnumerable<Equipment> equipments = _db.Equipments.Where(o => o.Status == Status.InStock).ToList();
-            //ViewBag.Equipments = equipments;
             return View();
         }
 
         public ActionResult Contact()
         {
-            //IEnumerable<Equipment> equipments = _db.Equipments.Where(o => o.Status == Status.InStock).ToList();
-            //ViewBag.Equipments = equipments;
+            return View();
+        }
+
+        public ActionResult Catalog()
+        {
+            var equipments = repo.GetEquipmentsByStatus(Status.InStock);
+            ViewBag.Equipments = equipments;
+
             return View();
         }
 
@@ -39,14 +43,25 @@ namespace ComputerShop.Controllers
         }
 
         [HttpPost]
-        public string Buy(Operation operation)
+        public ActionResult Buy(Operation operation)
         {
+            var equipment = repo.GetEquipmentById(operation.EquipmentId);
+            if (equipment == null)
+            {
+                return HttpNotFound();
+            }
+            equipment.Status = Status.Sold;
+            repo.ChangeEquipment(equipment);
+
             operation.Time = DateTime.Now;
+            operation.Type = OperationType.Sold;
+            operation.Id = Guid.NewGuid();
             // добавляем информацию о покупке в базу данных
-            _db.Operations.Add(operation);
+            repo.AddOperation(operation);
             // сохраняем в бд все изменения
-            _db.SaveChanges();
-            return "Спасибо," + operation.Destination + ", за покупку!";
+            repo.UpdateDatabase();
+            //return "Спасибо," + operation.Destination + ", за покупку!";
+            return RedirectToAction("Catalog", "Home");
         }
     }
 }

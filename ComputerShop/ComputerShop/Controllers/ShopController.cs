@@ -12,7 +12,7 @@ namespace ComputerShop.Controllers
     public class ShopController : Controller
     {
         // GET: Shop
-        ComputerShopDbContext _db = new ComputerShopDbContext();
+        ComputerShopRepository repo = new ComputerShopRepository();
         ApplicationDbContext _udb = new ApplicationDbContext();
         ApplicationUser CurrentUser = null;
 
@@ -27,7 +27,7 @@ namespace ComputerShop.Controllers
         {
             RefreshUserName();
 
-            IEnumerable<Equipment> equipments = _db.Equipments.Where(o => o.Status == Status.InStock).ToList();
+            var equipments = repo.GetEquipmentsByStatus(Status.InStock);
             ViewBag.Equipments = equipments;
 
             ViewBag.UserName = CurrentUser.Name;
@@ -39,7 +39,7 @@ namespace ComputerShop.Controllers
         {
             RefreshUserName();
 
-            IEnumerable<Equipment> equipments = _db.Equipments.Where(o => o.Status == Status.Sold).ToList();
+            var equipments = repo.GetEquipmentsByStatus(Status.Sold);
             ViewBag.Equipments = equipments;
 
             ViewBag.UserName = CurrentUser.Name;
@@ -48,21 +48,44 @@ namespace ComputerShop.Controllers
         }
 
         [HttpGet]
-        public ActionResult Buy(Guid id)
+        public ActionResult Sell(Guid id)
         {
             ViewBag.Id = id;
             return View();
         }
 
         [HttpPost]
-        public string Buy(Operation operation)
+        public ActionResult Sell(Operation operation)
         {
+            var equipment = repo.GetEquipmentById(operation.EquipmentId);
+            if(equipment == null)
+            {
+                return HttpNotFound();
+            }
+            equipment.Status = Status.Sold;
+            repo.ChangeEquipment(equipment);
+
             operation.Time = DateTime.Now;
+            operation.Type = OperationType.Sold;
+            operation.Id = Guid.NewGuid();
             // добавляем информацию о покупке в базу данных
-            _db.Operations.Add(operation);
+            repo.AddOperation(operation);
             // сохраняем в бд все изменения
-            _db.SaveChanges();
-            return "Спасибо," + operation.Destination + ", за покупку!";
+            repo.UpdateDatabase();
+            //return "Спасибо," + operation.Destination + ", за покупку!";
+            return RedirectToAction("InStock", "Shop");
+        }
+
+        [HttpPost]
+        public ActionResult AddEquipment(AddEquipmentModel equipmentModel)
+        {
+            var equipment = new Equipment(equipmentModel.Type, equipmentModel.Company, equipmentModel.Model, Status.InStock, equipmentModel.Price);
+            repo.AddEquipment(equipment);
+
+            var operation = new Operation(Guid.NewGuid(), OperationType.ToStock, equipmentModel.Destination, equipment.Id, DateTime.Now);
+            repo.AddOperation(operation);
+
+            return RedirectToAction("InStock", "Shop");
         }
     }
 }

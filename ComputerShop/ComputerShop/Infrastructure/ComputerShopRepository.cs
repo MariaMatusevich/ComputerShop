@@ -16,6 +16,11 @@ namespace ComputerShop.Infrastructure
             _db = new ComputerShopDbContext();
         }
 
+        public void UpdateDatabase()
+        {
+            _db.SaveChanges();
+        }
+
         #region [ Equipment ]
         public Equipment GetEquipmentById(Guid id)
         {
@@ -25,7 +30,7 @@ namespace ComputerShop.Infrastructure
         public void AddEquipment(Equipment equipment)
         {
             _db.Equipments.Add(equipment);
-
+            UpdateDatabase();
         }
 
         public void DeleteEquipment(Guid id)
@@ -36,6 +41,7 @@ namespace ComputerShop.Infrastructure
                 return;
             }
             _db.Equipments.Remove(equipment);
+            UpdateDatabase();
         }
 
         public List<Equipment> GetAllEquipment()
@@ -47,6 +53,11 @@ namespace ComputerShop.Infrastructure
         {
             DeleteEquipment(equipment.Id);
             AddEquipment(equipment);
+        }
+
+        public List<Equipment> GetEquipmentsByStatus(Status status)
+        {
+            return _db.Equipments.Where(o => o.Status == status).ToList();
         }
 
         #endregion
@@ -61,7 +72,7 @@ namespace ComputerShop.Infrastructure
         public void AddOperation(Operation operation)
         {
             _db.Operations.Add(operation);
-
+            UpdateDatabase();
         }
 
         public void DeleteOperation(Guid id)
@@ -72,6 +83,7 @@ namespace ComputerShop.Infrastructure
                 return;
             }
             _db.Operations.Remove(operation);
+            UpdateDatabase();
         }
 
         public List<Operation> GetAllOperation()
@@ -83,6 +95,7 @@ namespace ComputerShop.Infrastructure
         {
             DeleteOperation(operation.Id);
             AddOperation(operation);
+            UpdateDatabase();
         }
 
         #endregion

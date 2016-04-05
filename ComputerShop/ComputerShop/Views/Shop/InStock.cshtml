@@ -2,6 +2,93 @@
     ViewBag.Title = "В наличии";
     Layout = "~/Views/Shared/_LayoutShop.cshtml";
 }
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" method="post" action="@Url.Action("Sell", "Shop")">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Форма оформления продажи</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="" id="modalId" name="EquipmentId" />
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Имя клиента</label>
+                    <div class="input-group col-lg-8">
+                        <input type="text" class="form-control" placeholder="Введите имя клиента" name="Destination">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalAddItem" tabindex="-1" role="dialog" aria-labelledby="myModalAddItemLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" method="post" action="@Url.Action("AddEquipment", "Shop")">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Форма добавления товара</h4>
+            </div>
+            <div class="modal-body">
+
+                <input type="hidden" value="" id="modalId" name="EquipmentId" />
+
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Производитель</label>
+                    <div class="input-group col-lg-8">
+                        <input type="text" class="form-control" placeholder="Введите производителя" name="Company">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Модель</label>
+                    <div class="input-group col-lg-8">
+                        <input type="text" class="form-control" placeholder="Введите модель" name="Model">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Стоимость</label>
+                    <div class="input-group col-lg-8">
+                        <input type="text" class="form-control" placeholder="Введите стоимость" name="Price">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Тип</label>
+                    <div class="input-group col-lg-6">
+                        <select class="selectpicker" name="Type">
+                            <option>Компьютер</option>
+                            <option>Флеш память</option>
+                            <option>Жесткий диск</option>
+                        </select>
+                    </div>
+                </div>
+
+                <br />
+                <hr />
+
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Поставщик</label>
+                    <div class="input-group col-lg-8">
+                        <input type="text" class="form-control" placeholder="Введите название поставщика" name="Destination">
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary">Добавить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <br />
 <br />
 <div class="row">
@@ -9,7 +96,10 @@
         <h3>Распродажа компьютерной техники</h3>
     </div>
     <div class="col-lg-6">
-        <a href="#" class="btn btn-primary" style="float:right"><span class="glyphicon glyphicon-plus" style="margin-right:10px"></span>Добавить товар</a>
+        <a href="#" class="btn btn-primary" style="float:right" data-toggle="modal" data-target="#myModalAddItem">
+            <span class="glyphicon glyphicon-plus" style="margin-right:10px"></span>
+            Добавить товар
+        </a>
     </div>
 </div>
 
@@ -36,7 +126,8 @@
                     <td>@b.Model</td>
                     <td>@b.Price</td>
                     <td>@b.GetStatus()</td>
-                    <td><a href="/Home/Buy/@b.Id">Купить</a></td>
+                    @*<td><a href="/Home/Buy/@b.Id">Купить</a></td>*@
+                    <td><a data-toggle="modal" data-target="#myModal" onclick="InStockSetIdToSellModal('@b.Id')">Продать</a></td>
                 </tr>
                 i++;
             }
