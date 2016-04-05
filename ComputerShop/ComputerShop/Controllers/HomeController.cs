@@ -14,15 +14,15 @@ namespace ComputerShop.Controllers
 
         public ActionResult Index()
         {
-            IEnumerable<Equipment> equipments = _db.Equipments.Where(o => o.Status == Status.InStock).ToList();
-            ViewBag.Equipments = equipments;
+            //IEnumerable<Equipment> equipments = _db.Equipments.Where(o => o.Status == Status.InStock).ToList();
+            //ViewBag.Equipments = equipments;
             return View();
         }
 
-        public ActionResult Sold()
+        public ActionResult Contact()
         {
-            IEnumerable<Equipment> equipments = _db.Equipments.Where(o => o.Status == Status.Sold).ToList();
-            ViewBag.Equipments = equipments;
+            //IEnumerable<Equipment> equipments = _db.Equipments.Where(o => o.Status == Status.InStock).ToList();
+            //ViewBag.Equipments = equipments;
             return View();
         }
 

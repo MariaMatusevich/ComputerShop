@@ -5,15 +5,15 @@ namespace ComputerShop.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<ComputerShop.Infrastructure.ComputerShopDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<ComputerShop.Models.ApplicationDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            ContextKey = "ComputerShop.Infrastructure.ComputerShopDbContext";
+            ContextKey = "ComputerShop.Models.ApplicationDbContext";
         }
 
-        protected override void Seed(ComputerShop.Infrastructure.ComputerShopDbContext context)
+        protected override void Seed(ComputerShop.Models.ApplicationDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 
