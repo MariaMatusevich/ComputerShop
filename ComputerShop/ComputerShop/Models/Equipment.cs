@@ -17,8 +17,6 @@ namespace ComputerShop.Models
         public int Price { get; set; }
         
 
-
-
         public Equipment(EquipmentType type, string company, string model, Status status, int price)
         {
             Id = Guid.NewGuid();
@@ -29,9 +27,34 @@ namespace ComputerShop.Models
             Price = price;
         }
 
+        public Equipment(string type, string company, string model, Status status, string price)
+        {
+            Id = Guid.NewGuid();
+            Type = SetTypeFromString(type);
+            Company = company;
+            Model = model;
+            Status = status;
+            Price = int.Parse(price);
+        }
+
         public Equipment() : this(EquipmentType.Computer, "UNKNOWN", "UNKNOWN", Status.Sold, -111)
         {
 
+        }
+
+        public EquipmentType SetTypeFromString(string type)
+        {
+            switch (type)
+            {
+                case "Компьютер":
+                    return EquipmentType.Computer;
+                case "Флеш память":
+                    return EquipmentType.Flash;
+                case "Жесткий диск":
+                    return EquipmentType.HardDrive;
+                default:
+                    return EquipmentType.UNKNOWN;
+            }
         }
 
         public string GetType()
@@ -44,6 +67,8 @@ namespace ComputerShop.Models
                     return "Флеш память";
                 case EquipmentType.HardDrive:
                     return "Жесткий диск";
+                case EquipmentType.UNKNOWN:
+                    return "Unknown Type";
             }
             return "Unknown Type";
         }
@@ -62,6 +87,31 @@ namespace ComputerShop.Models
         }
     }
 
+    public class AddEquipmentModel
+    {
+        public string Company { get; set; }
+        public string Model { get; set; }
+        public string Price { get; set; }
+        public string Type { get; set; }
+
+        public string Destination { get; set; }
+
+
+        public AddEquipmentModel(string company, string model, string type, string price, string destination)
+        {
+            Company = company;
+            Type = type;
+            Model = model;
+            Price = price;
+            Destination = destination;
+        }
+
+        public AddEquipmentModel() : this("UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN")
+        {
+
+        }
+    }
+
     public enum EquipmentType
     {
         Computer,
@@ -69,7 +119,8 @@ namespace ComputerShop.Models
         Mouse,
         Monitor,
         Flash,
-        HardDrive
+        HardDrive,
+        UNKNOWN
     }
 
     public enum Status
