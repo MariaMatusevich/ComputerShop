@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "Операции";
+    Layout = "~/Views/Shared/_LayoutShop.cshtml";
+}
+
+<br />
+<br />
+<div class="row">
+    <div class="col-lg-6">
+        <h3>Операции</h3>
+    </div>
+    <div class="col-lg-6">
+    </div>
+</div>
+
+
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#inStockTabItem" data-toggle="tab" aria-expanded="true">Закупка <span class="badge">@ViewBag.DatalistInStock.Count</span></a></li>
+    <li class=""><a href="#soldTabItem" data-toggle="tab" aria-expanded="false">Проданое <span class="badge">@ViewBag.DatalistSold.Count</span></a></li>
+</ul>
+<div id="myTabContent" class="tab-content">
+    <div class="tab-pane fade active in" id="inStockTabItem">
+        <table class="table table-striped table-hover ">
+            <thead>
+                <tr>
+                    <th>#</th>
+
+                    <th>Тип оперции</th>
+                    <th>Пункт назначения</th>
+                    <th>Время</th>
+
+                    <th>Тип</th>
+                    <th>Производитель</th>
+                    <th>Модель</th>
+                    <th>Цена</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int i = 1;
+            foreach (ComputerShop.Models.OperationEquipment d in ViewBag.DatalistInStock)
+            {
+                        <tr class="danger">
+                            <td>@i</td>
+
+                            <td>@d.Operation.GetOperationTypeString()</td>
+                            <td>@d.Operation.Destination</td>
+                            <td>@d.Operation.Time</td>
+
+                            <td>@d.Equipment.GetType()</td>
+                            <td>@d.Equipment.Company</td>
+                            <td>@d.Equipment.Model</td>
+                            <td>@d.Equipment.Price</td>
+                            <td>@d.Equipment.GetStatus()</td>
+                        </tr>
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="soldTabItem">
+        <table class="table table-striped table-hover ">
+            <thead>
+                <tr>
+                    <th>#</th>
+
+                    <th>Тип оперции</th>
+                    <th>Пункт назначения</th>
+                    <th>Время</th>
+
+                    <th>Тип</th>
+                    <th>Производитель</th>
+                    <th>Модель</th>
+                    <th>Цена</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{i = 1;
+            foreach (ComputerShop.Models.OperationEquipment d in ViewBag.DatalistSold)
+            {
+                        <tr class="success">
+                            <td>@i</td>
+
+                            <td>@d.Operation.GetOperationTypeString()</td>
+                            <td>@d.Operation.Destination</td>
+                            <td>@d.Operation.Time</td>
+
+                            <td>@d.Equipment.GetType()</td>
+                            <td>@d.Equipment.Company</td>
+                            <td>@d.Equipment.Model</td>
+                            <td>@d.Equipment.Price</td>
+                            <td>@d.Equipment.GetStatus()</td>
+                        </tr>
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

@@ -55,25 +55,34 @@ namespace ComputerShop.Controllers
         }
 
         [HttpPost]
-        public ActionResult Sell(Operation operation)
+        public JsonResult Sell(Operation operation)
         {
             var equipment = repo.GetEquipmentById(operation.EquipmentId);
             if(equipment == null)
             {
-                return HttpNotFound();
+                return Json(new JsonResponse(JsonResponseType.Error, "Такого товара в базе нету. Обновите, пожалуйста, страницу."));
             }
             equipment.Status = Status.Sold;
             repo.ChangeEquipment(equipment);
 
+            var newOperation = repo.GetOperationByEquipmentId(equipment.Id);
+            if(newOperation != null)
+            {
+                operation = newOperation;
+            }
+            else
+            {
+                operation.Id = Guid.NewGuid();
+            }
             operation.Time = DateTime.Now;
             operation.Type = OperationType.Sold;
-            operation.Id = Guid.NewGuid();
+            
             // добавляем информацию о покупке в базу данных
-            repo.AddOperation(operation);
+            repo.ChangeOperation(operation);
             // сохраняем в бд все изменения
             repo.UpdateDatabase();
             //return "Спасибо," + operation.Destination + ", за покупку!";
-            return RedirectToAction("InStock", "Shop");
+            return Json(new JsonResponse(JsonResponseType.Success, equipment.GetType() + " успешно продан(-а)!"));
         }
 
         [HttpPost]
@@ -86,6 +95,50 @@ namespace ComputerShop.Controllers
             repo.AddOperation(operation);
 
             return RedirectToAction("InStock", "Shop");
+        }
+
+        public ActionResult Operations()
+        {
+            var operations = repo.GetAllOperation();
+            var listOE = new List<OperationEquipment>();
+            foreach (var o in operations)
+            {
+                listOE.Add(new OperationEquipment(o, repo.GetEquipmentById(o.EquipmentId)));
+            }
+
+            if (listOE.Count > 0)
+            {
+                ViewBag.DatalistInStock = listOE.Where(o => o.Operation.Type == OperationType.ToStock).ToList();
+                ViewBag.DatalistSold = listOE.Where(o => o.Operation.Type == OperationType.Sold).ToList();
+            }
+            else
+            {
+                ViewBag.DatalistInStock = new List<OperationEquipment>();
+                ViewBag.DatalistSold = new List<OperationEquipment>();
+            }
+            return View();
+        }
+
+        public ActionResult PurchaseRequisition()
+        {
+            var result = repo.GetAllPurchaseRequisition();
+
+            var listOE = new List<OperationEquipment>();
+            foreach (var o in result)
+            {
+                listOE.Add(new OperationEquipment(new Operation(o.Id, o.Type, o.Destination, o.EquipmentId, o.Time), repo.GetEquipmentById(o.EquipmentId)));
+            }
+
+            if (listOE.Count > 0)
+            {
+                ViewBag.PurchaseRequisition = listOE.Where(o => o.Operation.Type == OperationType.ToStock).ToList();
+            }
+            else
+            {
+                ViewBag.PurchaseRequisition = new List<OperationEquipment>();
+            }
+
+            return View();
         }
     }
 }

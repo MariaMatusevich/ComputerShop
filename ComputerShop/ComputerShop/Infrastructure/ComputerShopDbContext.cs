@@ -11,5 +11,6 @@ namespace ComputerShop.Infrastructure
     {
         public DbSet<Equipment> Equipments { get; set; }
         public DbSet<Operation> Operations { get; set; }
+        public DbSet<PurchaseRequisition> PurchaseRequisitions { get; set; }
     }
 }
