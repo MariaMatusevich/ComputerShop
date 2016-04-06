@@ -25,6 +25,19 @@ namespace ComputerShop.Models
             Time = time;
         }
 
+        public string GetOperationTypeString()
+        {
+            switch(Type)
+            {
+                case OperationType.Sold:
+                    return "Продано";
+                case OperationType.ToStock:
+                    return "Закуплено";
+                default:
+                    return "UNKNOWN";
+            }
+        }
+
         public Operation() : this(Guid.NewGuid(), OperationType.Sold, "UNKNOWN", Guid.NewGuid(), DateTime.MinValue)
         {
 

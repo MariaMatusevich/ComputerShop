@@ -4,9 +4,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div class="modal fade bs-example-modal-sm" id="mySmallModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                @*<h4 class="modal-title">Форма оформления продажи</h4>*@
+            </div>
+            <div class="modal-body">
+                <h5 class="modal-title"><span id="modalMessage"></span></h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form class="modal-content" method="post" action="@Url.Action("Buy", "Home")">
+        <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Форма оформления покупки</h4>
@@ -22,9 +39,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary">Купить</button>
+                <button type="submit" class="btn btn-primary" id="buttonBuy">Купить</button>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 

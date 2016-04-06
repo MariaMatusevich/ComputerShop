@@ -213,8 +213,11 @@
     <Compile Include="Models\ComputerShopDbInitializer.cs" />
     <Compile Include="Models\Equipment.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\JsonResponse.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Operation.cs" />
+    <Compile Include="Models\OperationEquipment.cs" />
+    <Compile Include="Models\PurchaseRequisition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -294,6 +297,8 @@
     <Content Include="Views\Manage\ChangeName.cshtml" />
     <Content Include="Views\Home\Catalog.cshtml" />
     <Content Include="Views\Shop\Sell.cshtml" />
+    <Content Include="Views\Shop\Operations.cshtml" />
+    <Content Include="Views\Shop\PurchaseRequisition.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

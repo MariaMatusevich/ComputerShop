@@ -43,25 +43,23 @@ namespace ComputerShop.Controllers
         }
 
         [HttpPost]
-        public ActionResult Buy(Operation operation)
+        public JsonResult Buy(Operation operation)
         {
             var equipment = repo.GetEquipmentById(operation.EquipmentId);
             if (equipment == null)
             {
-                return HttpNotFound();
+                return Json(new JsonResponse(JsonResponseType.Error, "Такого товара в базе нету. Обновите, пожалуйста, страницу."));
             }
-            equipment.Status = Status.Sold;
-            repo.ChangeEquipment(equipment);
 
             operation.Time = DateTime.Now;
             operation.Type = OperationType.Sold;
             operation.Id = Guid.NewGuid();
             // добавляем информацию о покупке в базу данных
-            repo.AddOperation(operation);
+            repo.AddPurchaseRequisition(operation);
             // сохраняем в бд все изменения
             repo.UpdateDatabase();
             //return "Спасибо," + operation.Destination + ", за покупку!";
-            return RedirectToAction("Catalog", "Home");
+            return Json(new JsonResponse(JsonResponseType.Success, "Вы успешно подали заявку на покупку: " +equipment.GetType() + " х 1шт. Наши специалисты скоро с Вами свящутся."));
         }
     }
 }

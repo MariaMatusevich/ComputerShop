@@ -69,6 +69,11 @@ namespace ComputerShop.Infrastructure
             return _db.Operations.Where(o => o.Id == id).FirstOrDefault();
         }
 
+        public Operation GetOperationByEquipmentId(Guid id)
+        {
+            return _db.Operations.Where(o => o.EquipmentId == id).FirstOrDefault();
+        }
+
         public void AddOperation(Operation operation)
         {
             _db.Operations.Add(operation);
@@ -96,6 +101,36 @@ namespace ComputerShop.Infrastructure
             DeleteOperation(operation.Id);
             AddOperation(operation);
             UpdateDatabase();
+        }
+
+        #endregion
+
+        #region [ PurchaseRequisition ]
+
+        public List<PurchaseRequisition> GetAllPurchaseRequisition()
+        {
+            return _db.PurchaseRequisitions.ToList();
+        }
+
+        public PurchaseRequisition GetPurchaseRequisitionById(Guid id)
+        {
+            return _db.PurchaseRequisitions.Where(o => o.Id == id).FirstOrDefault();
+        }
+
+        public void AddPurchaseRequisition(Operation operation)
+        {
+            _db.PurchaseRequisitions.Add(new PurchaseRequisition(operation));
+            UpdateDatabase();
+        }
+
+        public void DeletePurchaseRequisition(Guid id)
+        {
+            var o = GetPurchaseRequisitionById(id);
+            if (o != null)
+            {
+                _db.PurchaseRequisitions.Remove(o);
+                UpdateDatabase();
+            }
         }
 
         #endregion
