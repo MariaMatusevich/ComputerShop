@@ -52,14 +52,13 @@ namespace ComputerShop.Controllers
             }
 
             operation.Time = DateTime.Now;
-            operation.Type = OperationType.Sold;
-            operation.Id = Guid.NewGuid();
+            operation.Type = OperationType.PurchaseRequisition;
             // добавляем информацию о покупке в базу данных
             repo.AddPurchaseRequisition(operation);
             // сохраняем в бд все изменения
             repo.UpdateDatabase();
             //return "Спасибо," + operation.Destination + ", за покупку!";
-            return Json(new JsonResponse(JsonResponseType.Success, "Вы успешно подали заявку на покупку: " +equipment.GetType() + " х 1шт. Наши специалисты скоро с Вами свящутся."));
+            return Json(new JsonResponse(JsonResponseType.Success, "Вы успешно подали заявку на покупку: " +equipment.GetEquipmentType() + " х 1шт. Наши специалисты скоро с Вами свящутся."));
         }
     }
 }

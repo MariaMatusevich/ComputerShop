@@ -9,7 +9,7 @@
         <li>
             @{
                 string name = string.IsNullOrEmpty(ViewBag.UserName) ? User.Identity.GetUserName() : ViewBag.UserName;
-            @Html.ActionLink("Hello " + name + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            @Html.ActionLink("Hello, " + name + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
             }
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>

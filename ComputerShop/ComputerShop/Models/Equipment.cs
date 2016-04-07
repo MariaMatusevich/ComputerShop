@@ -57,7 +57,7 @@ namespace ComputerShop.Models
             }
         }
 
-        public string GetType()
+        public string GetEquipmentType()
         {
             switch (Type)
             {
@@ -126,6 +126,7 @@ namespace ComputerShop.Models
     public enum Status
     {
         InStock,
-        Sold
+        Sold,
+        PurchaseRequisition
     }
 }

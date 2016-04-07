@@ -27,6 +27,8 @@
             <th>Модель</th>
             <th>Цена</th>
             <th>Статус</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -40,11 +42,13 @@
                     <td>@d.Operation.Destination</td>
                     <td>@d.Operation.Time</td>
 
-                    <td>@d.Equipment.GetType()</td>
+                    <td>@d.Equipment.GetEquipmentType()</td>
                     <td>@d.Equipment.Company</td>
                     <td>@d.Equipment.Model</td>
                     <td>@d.Equipment.Price</td>
                     <td>@d.Equipment.GetStatus()</td>
+                    <td><a href="@Url.Action("SellPurchaseRequisition", "Shop", new { id = d.Operation.Id.ToString() })" class="btn btn-success btn-sm">Продать</a></td>
+                    <td><a href="@Url.Action("SellPurchaseRequisition", "Shop", new { id = d.Operation.Id.ToString() })" class="btn btn-danger btn-sm">Отменить</a></td>
                 </tr>
                 i++;
             }

@@ -18,7 +18,14 @@ namespace ComputerShop.Models
 
         public Operation(Guid operationId, OperationType type, string destination, Guid equipmentId, DateTime time)
         {
-            Id = Guid.NewGuid();
+            if (operationId != null)
+            {
+                Id = operationId;
+            }
+            else
+            {
+                Id = Guid.NewGuid();
+            }
             Type = type;
             Destination = destination;
             EquipmentId = equipmentId;
@@ -33,6 +40,8 @@ namespace ComputerShop.Models
                     return "Продано";
                 case OperationType.ToStock:
                     return "Закуплено";
+                case OperationType.PurchaseRequisition:
+                    return "Заявка на покупку";
                 default:
                     return "UNKNOWN";
             }
@@ -47,6 +56,7 @@ namespace ComputerShop.Models
     public enum OperationType
     {
         ToStock,
-        Sold
+        Sold,
+        PurchaseRequisition
     }
 }

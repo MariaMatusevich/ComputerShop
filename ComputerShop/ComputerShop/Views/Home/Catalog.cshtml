@@ -69,11 +69,11 @@
     </thead>
     <tbody>
         @{int i = 1;
-            foreach (var b in ViewBag.Equipments)
+            foreach (ComputerShop.Models.Equipment b in ViewBag.Equipments)
             {
                 <tr>
                     <td>@i</td>
-                    <td>@b.GetType()</td>
+                    <td>@b.GetEquipmentType()</td>
                     <td>@b.Company</td>
                     <td>@b.Model</td>
                     <td>@b.Price</td>

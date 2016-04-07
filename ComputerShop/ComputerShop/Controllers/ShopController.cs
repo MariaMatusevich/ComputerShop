@@ -31,6 +31,7 @@ namespace ComputerShop.Controllers
             ViewBag.Equipments = equipments;
 
             ViewBag.UserName = CurrentUser.Name;
+            ViewBag.PurchaseRequisitionCount = repo.GetPurchaseRequisitionCount();
 
             return View();
         }
@@ -43,6 +44,7 @@ namespace ComputerShop.Controllers
             ViewBag.Equipments = equipments;
 
             ViewBag.UserName = CurrentUser.Name;
+            ViewBag.PurchaseRequisitionCount = repo.GetPurchaseRequisitionCount();
 
             return View();
         }
@@ -65,24 +67,16 @@ namespace ComputerShop.Controllers
             equipment.Status = Status.Sold;
             repo.ChangeEquipment(equipment);
 
-            var newOperation = repo.GetOperationByEquipmentId(equipment.Id);
-            if(newOperation != null)
-            {
-                operation = newOperation;
-            }
-            else
-            {
-                operation.Id = Guid.NewGuid();
-            }
+            operation.Id = Guid.NewGuid();
             operation.Time = DateTime.Now;
             operation.Type = OperationType.Sold;
             
             // добавляем информацию о покупке в базу данных
-            repo.ChangeOperation(operation);
+            repo.AddOperation(operation);
             // сохраняем в бд все изменения
             repo.UpdateDatabase();
             //return "Спасибо," + operation.Destination + ", за покупку!";
-            return Json(new JsonResponse(JsonResponseType.Success, equipment.GetType() + " успешно продан(-а)!"));
+            return Json(new JsonResponse(JsonResponseType.Success, equipment.GetEquipmentType() + " успешно продан(-а)!"));
         }
 
         [HttpPost]
@@ -99,6 +93,8 @@ namespace ComputerShop.Controllers
 
         public ActionResult Operations()
         {
+            RefreshUserName();
+
             var operations = repo.GetAllOperation();
             var listOE = new List<OperationEquipment>();
             foreach (var o in operations)
@@ -116,11 +112,17 @@ namespace ComputerShop.Controllers
                 ViewBag.DatalistInStock = new List<OperationEquipment>();
                 ViewBag.DatalistSold = new List<OperationEquipment>();
             }
+
+            ViewBag.UserName = CurrentUser.Name;
+            ViewBag.PurchaseRequisitionCount = repo.GetPurchaseRequisitionCount();
+
             return View();
         }
 
         public ActionResult PurchaseRequisition()
         {
+            RefreshUserName();
+
             var result = repo.GetAllPurchaseRequisition();
 
             var listOE = new List<OperationEquipment>();
@@ -131,14 +133,60 @@ namespace ComputerShop.Controllers
 
             if (listOE.Count > 0)
             {
-                ViewBag.PurchaseRequisition = listOE.Where(o => o.Operation.Type == OperationType.ToStock).ToList();
+                ViewBag.PurchaseRequisition = listOE.Where(o => o.Operation.Type == OperationType.PurchaseRequisition).ToList();
             }
             else
             {
                 ViewBag.PurchaseRequisition = new List<OperationEquipment>();
             }
 
+            ViewBag.UserName = CurrentUser.Name;
+            ViewBag.PurchaseRequisitionCount = repo.GetPurchaseRequisitionCount();
+
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult SellPurchaseRequisition(string id)
+        {
+            var operationId = new Guid(id);
+            var operation = repo.GetPurchaseRequisitionById(operationId);
+            if(operation == null)
+            {
+                return HttpNotFound();
+            }
+            var equipment = repo.GetEquipmentById(operation.EquipmentId);
+            if (equipment == null)
+            {
+                return HttpNotFound();
+            }
+
+            equipment.Status = Status.Sold;
+            repo.ChangeEquipment(equipment);
+
+            repo.DeletePurchaseRequisition(operation.Id);
+            operation.Type = OperationType.Sold;
+            operation.Time = DateTime.Now;
+
+            repo.AddOperation(new Operation(operation.Id, operation.Type, operation.Destination, operation.EquipmentId, operation.Time));
+
+            repo.UpdateDatabase();
+            return RedirectToAction("PurchaseRequisition");
+        }
+
+        [HttpGet]
+        public ActionResult CancelPurchaseRequisition(string id)
+        {
+            var operationId = new Guid(id);
+            var operation = repo.GetPurchaseRequisitionById(operationId);
+            if (operation == null)
+            {
+                return HttpNotFound();
+            }
+
+            repo.DeletePurchaseRequisition(operation.Id);
+            repo.UpdateDatabase();
+            return RedirectToAction("PurchaseRequisition");
         }
     }
 }

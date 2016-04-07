@@ -133,6 +133,11 @@ namespace ComputerShop.Infrastructure
             }
         }
 
+        public int GetPurchaseRequisitionCount()
+        {
+            return _db.PurchaseRequisitions.Count();
+        }
+
         #endregion
     }
 }
