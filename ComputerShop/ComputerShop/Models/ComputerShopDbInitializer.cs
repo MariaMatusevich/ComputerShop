@@ -46,20 +46,14 @@ namespace ComputerShop.Models
                 }
                 if (l.Status == Status.Sold)
                 {
-                    var operation = new Operation(Guid.NewGuid(), OperationType.Sold, oldPrice, "", l.Id, DateTime.Now);
+                    var operation = new Operation(Guid.NewGuid(), OperationType.ToStock, oldPrice, "MIPS", l.Id, DateTime.Now);
+                    db.Operations.Add(operation);
+
+                    operation = new Operation(Guid.NewGuid(), OperationType.Sold, newPrice, "", l.Id, DateTime.Now);
                     db.Operations.Add(operation);
                 }
             }
 
-
-
-            /*int oldPrice = int.Parse(equipmentModel.Price);
-            int newPrice = oldPrice + (int)(oldPrice * 0.2);
-
-            var equipment = new Equipment(equipmentModel.Type, equipmentModel.Company, equipmentModel.Model, Status.InStock, newPrice.ToString());
-            repo.AddEquipment(equipment);
-
-            var operation = new Operation(Guid.NewGuid(), OperationType.ToStock, oldPrice, equipmentModel.Destination, equipment.Id, DateTime.Now);*/
             base.Seed(db);
         }
     }
