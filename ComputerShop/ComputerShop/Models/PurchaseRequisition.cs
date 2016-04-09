@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace ComputerShop.Models
 {
@@ -14,6 +11,7 @@ namespace ComputerShop.Models
         public string Destination { get; set; }
         public Guid EquipmentId { get; set; }
         public DateTime Time { get; set; }
+        public int Price { get; set; }
 
         public PurchaseRequisition(Operation operation)
         {
@@ -22,6 +20,7 @@ namespace ComputerShop.Models
             Destination = operation.Destination;
             EquipmentId = operation.EquipmentId;
             Time = operation.Time;
+            Price = operation.Price;
         }
 
         public PurchaseRequisition() : this(new Operation())

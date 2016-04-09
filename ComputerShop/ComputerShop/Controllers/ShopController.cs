@@ -17,35 +17,36 @@ namespace ComputerShop.Controllers
         ApplicationUser CurrentUser = null;
 
 
-        private void RefreshUserName()
+        private void RefreshData()
         {
             var userId = Microsoft.AspNet.Identity.IdentityExtensions.GetUserId(User.Identity);
             CurrentUser = _udb.Users.Where(o => o.Id == userId).FirstOrDefault();
+
+            ViewBag.UserName = CurrentUser.Name;
+            ViewBag.PurchaseRequisitionCount = repo.GetPurchaseRequisitionCount();
+        }
+
+        public ActionResult Index()
+        {
+            return RedirectToAction("InStock", "Shop");
         }
 
         public ActionResult InStock()
         {
-            RefreshUserName();
-
             var equipments = repo.GetEquipmentsByStatus(Status.InStock);
             ViewBag.Equipments = equipments;
 
-            ViewBag.UserName = CurrentUser.Name;
-            ViewBag.PurchaseRequisitionCount = repo.GetPurchaseRequisitionCount();
 
+            RefreshData();
             return View();
         }
 
         public ActionResult Sold()
         {
-            RefreshUserName();
-
             var equipments = repo.GetEquipmentsByStatus(Status.Sold);
             ViewBag.Equipments = equipments;
 
-            ViewBag.UserName = CurrentUser.Name;
-            ViewBag.PurchaseRequisitionCount = repo.GetPurchaseRequisitionCount();
-
+            RefreshData();
             return View();
         }
 
@@ -70,6 +71,7 @@ namespace ComputerShop.Controllers
             operation.Id = Guid.NewGuid();
             operation.Time = DateTime.Now;
             operation.Type = OperationType.Sold;
+            operation.Price = equipment.Price;
             
             // добавляем информацию о покупке в базу данных
             repo.AddOperation(operation);
@@ -82,10 +84,13 @@ namespace ComputerShop.Controllers
         [HttpPost]
         public ActionResult AddEquipment(AddEquipmentModel equipmentModel)
         {
-            var equipment = new Equipment(equipmentModel.Type, equipmentModel.Company, equipmentModel.Model, Status.InStock, equipmentModel.Price);
+            int oldPrice = int.Parse(equipmentModel.Price);
+            int newPrice = oldPrice + (int)(oldPrice * 0.2);
+
+            var equipment = new Equipment(equipmentModel.Type, equipmentModel.Company, equipmentModel.Model, Status.InStock, newPrice.ToString());
             repo.AddEquipment(equipment);
 
-            var operation = new Operation(Guid.NewGuid(), OperationType.ToStock, equipmentModel.Destination, equipment.Id, DateTime.Now);
+            var operation = new Operation(Guid.NewGuid(), OperationType.ToStock, oldPrice, equipmentModel.Destination, equipment.Id, DateTime.Now);
             repo.AddOperation(operation);
 
             return RedirectToAction("InStock", "Shop");
@@ -93,12 +98,24 @@ namespace ComputerShop.Controllers
 
         public ActionResult Operations()
         {
-            RefreshUserName();
-
             var operations = repo.GetAllOperation();
             var listOE = new List<OperationEquipment>();
+            int cash = 0;
+
             foreach (var o in operations)
             {
+                switch (o.Type)
+                {
+                    case OperationType.ToStock:
+                        cash -= o.Price;
+                        break;
+                    case OperationType.Sold:
+                        cash += o.Price;
+                        break;
+                    default:
+                        break;
+                }
+
                 listOE.Add(new OperationEquipment(o, repo.GetEquipmentById(o.EquipmentId)));
             }
 
@@ -113,22 +130,19 @@ namespace ComputerShop.Controllers
                 ViewBag.DatalistSold = new List<OperationEquipment>();
             }
 
-            ViewBag.UserName = CurrentUser.Name;
-            ViewBag.PurchaseRequisitionCount = repo.GetPurchaseRequisitionCount();
-
+            ViewBag.TotalCash = cash;
+            RefreshData();
             return View();
         }
 
         public ActionResult PurchaseRequisition()
         {
-            RefreshUserName();
-
             var result = repo.GetAllPurchaseRequisition();
 
             var listOE = new List<OperationEquipment>();
             foreach (var o in result)
             {
-                listOE.Add(new OperationEquipment(new Operation(o.Id, o.Type, o.Destination, o.EquipmentId, o.Time), repo.GetEquipmentById(o.EquipmentId)));
+                listOE.Add(new OperationEquipment(new Operation(o.Id, o.Type, o.Price, o.Destination, o.EquipmentId, o.Time), repo.GetEquipmentById(o.EquipmentId)));
             }
 
             if (listOE.Count > 0)
@@ -140,9 +154,7 @@ namespace ComputerShop.Controllers
                 ViewBag.PurchaseRequisition = new List<OperationEquipment>();
             }
 
-            ViewBag.UserName = CurrentUser.Name;
-            ViewBag.PurchaseRequisitionCount = repo.GetPurchaseRequisitionCount();
-
+            RefreshData();
             return View();
         }
 
@@ -168,9 +180,11 @@ namespace ComputerShop.Controllers
             operation.Type = OperationType.Sold;
             operation.Time = DateTime.Now;
 
-            repo.AddOperation(new Operation(operation.Id, operation.Type, operation.Destination, operation.EquipmentId, operation.Time));
-
+            repo.AddOperation(new Operation(operation.Id, operation.Type, equipment.Price, operation.Destination, operation.EquipmentId, operation.Time));
             repo.UpdateDatabase();
+
+            ComputerShopHelper.SendMail(operation.Destination, "Вас беспокоит магазин компьютерной техники ComputerShop.\nМы уже подготовили " + equipment.GetEquipmentType() +". Можете прийти по адресу и забрать", true);
+
             return RedirectToAction("PurchaseRequisition");
         }
 
@@ -184,8 +198,13 @@ namespace ComputerShop.Controllers
                 return HttpNotFound();
             }
 
+            var equipment = repo.GetEquipmentById(operation.EquipmentId);
+
             repo.DeletePurchaseRequisition(operation.Id);
             repo.UpdateDatabase();
+
+            ComputerShopHelper.SendMail(operation.Destination, "Вас беспокоит магазин компьютерной техники ComputerShop.\nИзвините, но "+ equipment.GetEquipmentType() + " уже продан(-а).", true);
+
             return RedirectToAction("PurchaseRequisition");
         }
     }

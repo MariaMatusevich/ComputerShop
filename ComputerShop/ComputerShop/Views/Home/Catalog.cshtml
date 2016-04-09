@@ -31,9 +31,9 @@
             <div class="modal-body">
                 <input type="hidden" value="" id="modalId" name="EquipmentId" />
                 <div class="form-group">
-                    <label class="control-label col-lg-4">Ваше имя</label>
+                    <label class="control-label col-lg-4">Ваш E-mail</label>
                     <div class="input-group col-lg-8">
-                        <input type="text" class="form-control" placeholder="Введите Ваше имя" name="Destination">
+                        <input type="email" class="form-control required email" placeholder="Введите Ваш e-mail" name="Destination">
                     </div>
                 </div>
             </div>
@@ -58,7 +58,6 @@
 <table class="table table-striped table-hover ">
     <thead>
         <tr>
-            <th>#</th>
             <th>Тип</th>
             <th>Производитель</th>
             <th>Модель</th>
@@ -68,22 +67,19 @@
         </tr>
     </thead>
     <tbody>
-        @{int i = 1;
+        @{
             foreach (ComputerShop.Models.Equipment b in ViewBag.Equipments)
             {
                 <tr>
-                    <td>@i</td>
                     <td>@b.GetEquipmentType()</td>
                     <td>@b.Company</td>
                     <td>@b.Model</td>
-                    <td>@b.Price</td>
+                    <td>@ComputerShop.Models.ComputerShopHelper.GetPriceFormat(b.Price)</td>
                     <td>@b.GetStatus()</td>
                     <td><a data-toggle="modal" data-target="#myModal" onclick="CatalogSetIdToSellModal('@b.Id')">Купить</a></td>
                     @*<td><a href="/Home/Buy/@b.Id">Купить</a></td>*@
                 </tr>
-                i++;
             }
         }
     </tbody>
 </table>
-

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace ComputerShop.Models
 {
@@ -14,9 +11,10 @@ namespace ComputerShop.Models
         public string Destination { get; set; }
         public Guid EquipmentId { get; set; }
         public DateTime Time { get; set; }
+        public int Price { get; set; }
 
 
-        public Operation(Guid operationId, OperationType type, string destination, Guid equipmentId, DateTime time)
+        public Operation(Guid operationId, OperationType type, int price, string destination, Guid equipmentId, DateTime time)
         {
             if (operationId != null)
             {
@@ -27,14 +25,16 @@ namespace ComputerShop.Models
                 Id = Guid.NewGuid();
             }
             Type = type;
+            Price = price;
             Destination = destination;
             EquipmentId = equipmentId;
             Time = time;
+
         }
 
         public string GetOperationTypeString()
         {
-            switch(Type)
+            switch (Type)
             {
                 case OperationType.Sold:
                     return "Продано";
@@ -47,16 +47,11 @@ namespace ComputerShop.Models
             }
         }
 
-        public Operation() : this(Guid.NewGuid(), OperationType.Sold, "UNKNOWN", Guid.NewGuid(), DateTime.MinValue)
+        public Operation() : this(Guid.NewGuid(), OperationType.Sold, -111, "UNKNOWN", Guid.NewGuid(), DateTime.MinValue)
         {
 
         }
 
-}
-    public enum OperationType
-    {
-        ToStock,
-        Sold,
-        PurchaseRequisition
     }
+
 }

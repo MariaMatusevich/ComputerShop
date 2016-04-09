@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace ComputerShop.Models
 {
@@ -20,6 +17,16 @@ namespace ComputerShop.Models
         public Equipment(EquipmentType type, string company, string model, Status status, int price)
         {
             Id = Guid.NewGuid();
+            Type = type;
+            Company = company;
+            Model = model;
+            Status = status;
+            Price = price;
+        }
+
+        public Equipment(Guid id, EquipmentType type, string company, string model, Status status, int price)
+        {
+            Id = id;
             Type = type;
             Company = company;
             Model = model;
@@ -110,23 +117,5 @@ namespace ComputerShop.Models
         {
 
         }
-    }
-
-    public enum EquipmentType
-    {
-        Computer,
-        Notebook,
-        Mouse,
-        Monitor,
-        Flash,
-        HardDrive,
-        UNKNOWN
-    }
-
-    public enum Status
-    {
-        InStock,
-        Sold,
-        PurchaseRequisition
     }
 }

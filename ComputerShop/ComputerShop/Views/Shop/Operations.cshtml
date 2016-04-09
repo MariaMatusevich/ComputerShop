@@ -11,6 +11,9 @@
         <h3>Операции</h3>
     </div>
     <div class="col-lg-6">
+        <a class="label label-default" style="float:right">
+            Баланс: @ComputerShop.Models.ComputerShopHelper.GetPriceFormat(ViewBag.TotalCash)
+        </a>
     </div>
 </div>
 
@@ -24,8 +27,6 @@
         <table class="table table-striped table-hover ">
             <thead>
                 <tr>
-                    <th>#</th>
-
                     <th>Тип оперции</th>
                     <th>Пункт назначения</th>
                     <th>Время</th>
@@ -38,12 +39,10 @@
                 </tr>
             </thead>
             <tbody>
-                @{int i = 1;
+                @{
             foreach (ComputerShop.Models.OperationEquipment d in ViewBag.DatalistInStock)
             {
                         <tr class="danger">
-                            <td>@i</td>
-
                             <td>@d.Operation.GetOperationTypeString()</td>
                             <td>@d.Operation.Destination</td>
                             <td>@d.Operation.Time</td>
@@ -51,10 +50,9 @@
                             <td>@d.Equipment.GetEquipmentType()</td>
                             <td>@d.Equipment.Company</td>
                             <td>@d.Equipment.Model</td>
-                            <td>@d.Equipment.Price</td>
+                            <td>@ComputerShop.Models.ComputerShopHelper.GetPriceFormat(d.Operation.Price)</td>
                             <td>@d.Equipment.GetStatus()</td>
                         </tr>
-                        i++;
                     }
                 }
             </tbody>
@@ -64,8 +62,6 @@
         <table class="table table-striped table-hover ">
             <thead>
                 <tr>
-                    <th>#</th>
-
                     <th>Тип оперции</th>
                     <th>Пункт назначения</th>
                     <th>Время</th>
@@ -78,23 +74,20 @@
                 </tr>
             </thead>
             <tbody>
-                @{i = 1;
+                @{
             foreach (ComputerShop.Models.OperationEquipment d in ViewBag.DatalistSold)
             {
                         <tr class="success">
-                            <td>@i</td>
-
                             <td>@d.Operation.GetOperationTypeString()</td>
                             <td>@d.Operation.Destination</td>
                             <td>@d.Operation.Time</td>
 
-                            <td>@d.Equipment.GetType()</td>
+                            <td>@d.Equipment.GetEquipmentType()</td>
                             <td>@d.Equipment.Company</td>
                             <td>@d.Equipment.Model</td>
-                            <td>@d.Equipment.Price</td>
+                            <td>@ComputerShop.Models.ComputerShopHelper.GetPriceFormat(d.Operation.Price)</td>
                             <td>@d.Equipment.GetStatus()</td>
                         </tr>
-                        i++;
                     }
                 }
             </tbody>

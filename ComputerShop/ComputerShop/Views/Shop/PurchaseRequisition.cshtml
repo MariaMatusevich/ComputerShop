@@ -16,8 +16,6 @@
 <table class="table table-striped table-hover ">
     <thead>
         <tr>
-            <th>#</th>
-
             <th>Тип оперции</th>
             <th>Пункт назначения</th>
             <th>Время</th>
@@ -32,12 +30,10 @@
         </tr>
     </thead>
     <tbody>
-        @{int i = 1;
+        @{
             foreach (ComputerShop.Models.OperationEquipment d in ViewBag.PurchaseRequisition)
             {
                 <tr>
-                    <td>@i</td>
-
                     <td>@d.Operation.GetOperationTypeString()</td>
                     <td>@d.Operation.Destination</td>
                     <td>@d.Operation.Time</td>
@@ -45,12 +41,11 @@
                     <td>@d.Equipment.GetEquipmentType()</td>
                     <td>@d.Equipment.Company</td>
                     <td>@d.Equipment.Model</td>
-                    <td>@d.Equipment.Price</td>
+                    <td>@ComputerShop.Models.ComputerShopHelper.GetPriceFormat(d.Equipment.Price)</td>
                     <td>@d.Equipment.GetStatus()</td>
                     <td><a href="@Url.Action("SellPurchaseRequisition", "Shop", new { id = d.Operation.Id.ToString() })" class="btn btn-success btn-sm">Продать</a></td>
-                    <td><a href="@Url.Action("SellPurchaseRequisition", "Shop", new { id = d.Operation.Id.ToString() })" class="btn btn-danger btn-sm">Отменить</a></td>
+                    <td><a href="@Url.Action("CancelPurchaseRequisition", "Shop", new { id = d.Operation.Id.ToString() })" class="btn btn-danger btn-sm">Отменить</a></td>
                 </tr>
-                i++;
             }
         }
     </tbody>

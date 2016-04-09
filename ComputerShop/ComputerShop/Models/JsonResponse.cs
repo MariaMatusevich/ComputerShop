@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace ComputerShop.Models
+﻿namespace ComputerShop.Models
 {
     public class JsonResponse
     {
@@ -15,11 +10,5 @@ namespace ComputerShop.Models
             Type = type;
             Message = message;
         }
-    }
-
-    public enum JsonResponseType
-    {
-        Success = 200,
-        Error = 400
     }
 }
