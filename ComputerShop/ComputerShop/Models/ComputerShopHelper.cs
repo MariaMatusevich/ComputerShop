@@ -38,7 +38,7 @@ namespace ComputerShop.Models
         public static string GetWelcomeString()
         {
             var hour = DateTime.Now.Hour;
-            if (hour > 3 && hour < 12) return "Доброу утро!";
+            if (hour > 3 && hour < 12) return "Доброе утро!";
             if (hour > 11 && hour < 18) return "Добрый день!";
             if (hour > 17 && hour < 24) return "Добрый вечер!";
             if (hour > 23 || hour < 4) return "Доброй ночи!";
